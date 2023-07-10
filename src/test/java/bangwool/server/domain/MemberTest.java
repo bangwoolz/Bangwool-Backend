@@ -1,15 +1,16 @@
 package bangwool.server.domain;
 
 import bangwool.server.exception.RegexException;
-import jakarta.validation.*;
+import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import jakarta.validation.Validator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 
 import static bangwool.server.domain.MemberTest.Type.*;
