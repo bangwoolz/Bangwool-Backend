@@ -40,9 +40,9 @@ public class Member {
     private String nickname;
     @Lob
     @Column(name="profile")
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] profile;
+    private String profile;
 
+    //todo: 이름 정규 표현식 정해야 함
     @Column(name = "name")
     private String name;
 
