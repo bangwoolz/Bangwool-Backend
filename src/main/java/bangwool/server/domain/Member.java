@@ -5,6 +5,10 @@ import bangwool.server.exception.RegexException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.security.Timestamp;
 
 @Entity
 @Table
@@ -31,7 +35,25 @@ public class Member {
     @Column(name="password")
     private String password;
 
-    @Pattern(regexp = NICKNAME_REGEX, message = RegexException.NIKCNAME_EXCEPTION)
+    @Pattern(regexp = NICKNAME_REGEX, message = RegexException.NICKNAME_EXCEPTION)
     @Column(name="nickname", unique = true)
     private String nickname;
+    @Lob
+    @Column(name="profile")
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] profile;
+
+    @Column(name = "name")
+    private String name;
+
+    @CreationTimestamp
+    @Column(name = "createDate")
+    private Timestamp createDate;
+
+    @UpdateTimestamp
+    @Column(name = "updateDate")
+    private Timestamp updateDate;
+
+    @Column(name="status")
+    private String status;
 }
