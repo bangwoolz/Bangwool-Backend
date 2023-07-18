@@ -6,5 +6,9 @@ public class RegexException {
     public static final String NICKNAME_EXCEPTION = "닉네임 형식을 확인해 주세요";
     public static final String PASSWORD_EXCEPTION = "비밀번호 형식을 확인해 주세요";
 
-    public static final String EMPTY_EXCEPTION = "";
+    public static final String NAME_EXCEPTION = "이름 형식을 확인해 주세요";
+    public static final String NICKNAME_DUPLICATE_EXCEPTION = "닉네임 중복 입니다";
+    public static final String EMAIL_DUPLICATE_EXCEPTION = "이메일 중복 입니다";
+    public static final String REGEX_SUCCESS = "성공";
+    public static final String NULL_EXCEPTION = "비어 있는 란을 채워 주세요";
 }

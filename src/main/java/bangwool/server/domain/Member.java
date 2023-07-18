@@ -8,7 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+
 
 @Entity
 @Table
@@ -20,40 +21,52 @@ public class Member {
     public static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
     public static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^&*()])(?=\\S+$).{8,12}$";
     public static final String NICKNAME_REGEX = "^[a-zA-Z0-9가-힣]{1,5}$";
+    public static final String NAME_REGEX = "^[가-힣]{2,5}$";
+    public static final String ID = "ID";
+    public static final String EMAIL = "EMAIL";
+    public static final String PASSWORD = "PASSWORD";
+    public static final String NICKNAME = "NICKNAME";
+    public static final String NAME = "NAME";
+    public static final String STATUS = "STATUS";
+    public static final String PROFILE = "PROFILE";
+    public static final String CREATE_DATE = "CREATE_DATE";
+    public static final String UPDATE_DATE = "UPDATE_DATE";
+    public static final String STATUS_ACTIVE = "active";
+    public static final String DEFAULT_PROFILE_ROOT = "./src/main/resources/picture/tomato.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = ID, nullable = false)
     private Long id;
-
-
-    @Pattern(regexp = EMAIL_REGEX , message = RegexException.EMAIL_EXCEPTION)
-    @Column(name="email", unique = true)
+    @Pattern(regexp = EMAIL_REGEX, message = RegexException.EMAIL_EXCEPTION)
+    @Column(name = EMAIL, unique = true, nullable = false)
     private String email;
 
     @Pattern(regexp = PASSWORD_REGEX, message = RegexException.PASSWORD_EXCEPTION)
-    @Column(name="password")
+    @Column(name = PASSWORD, nullable = false)
     private String password;
 
     @Pattern(regexp = NICKNAME_REGEX, message = RegexException.NICKNAME_EXCEPTION)
-    @Column(name="nickname", unique = true)
+    @Column(name = NICKNAME, unique = true, nullable = false)
     private String nickname;
-    @Lob
-    @Column(name="profile")
-    private String profile;
 
-    //todo: 이름 정규 표현식 정해야 함
-    @Column(name = "name")
+    @Column(name = PROFILE, nullable = false)
+    @Builder.Default()
+    private String profile = DEFAULT_PROFILE_ROOT;
+
+    @Pattern(regexp = NAME_REGEX, message = RegexException.NAME_EXCEPTION)
+    @Column(name = NAME, nullable = false)
     private String name;
 
     @CreationTimestamp
-    @Column(name = "createDate")
+    @Column(name = CREATE_DATE, nullable = false)
     private Timestamp createDate;
 
     @UpdateTimestamp
-    @Column(name = "updateDate")
+    @Column(name = UPDATE_DATE, nullable = false)
     private Timestamp updateDate;
 
-    @Column(name="status")
-    private String status;
+    @Column(name = STATUS, nullable = false)
+    @Builder.Default
+    private String status = STATUS_ACTIVE;
 }
