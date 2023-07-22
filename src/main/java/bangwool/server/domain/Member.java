@@ -1,9 +1,6 @@
 package bangwool.server.domain;
 
-
-import bangwool.server.exception.RegexException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,10 +15,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 public class Member {
-    public static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
-    public static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^&*()])(?=\\S+$).{8,12}$";
-    public static final String NICKNAME_REGEX = "^[a-zA-Z0-9가-힣]{1,5}$";
-    public static final String NAME_REGEX = "^[가-힣]{2,5}$";
     public static final String ID = "ID";
     public static final String EMAIL = "EMAIL";
     public static final String PASSWORD = "PASSWORD";
@@ -38,35 +31,33 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = ID, nullable = false)
     private Long id;
-    @Pattern(regexp = EMAIL_REGEX, message = RegexException.EMAIL_EXCEPTION)
-    @Column(name = EMAIL, unique = true, nullable = false)
+    @Column(name = EMAIL, unique = true)
     private String email;
 
-    @Pattern(regexp = PASSWORD_REGEX, message = RegexException.PASSWORD_EXCEPTION)
-    @Column(name = PASSWORD, nullable = false)
+    @Column(name = PASSWORD)
     private String password;
 
-    @Pattern(regexp = NICKNAME_REGEX, message = RegexException.NICKNAME_EXCEPTION)
-    @Column(name = NICKNAME, unique = true, nullable = false)
+    @Column(name = NICKNAME, unique = true)
     private String nickname;
 
-    @Column(name = PROFILE, nullable = false)
+    @Column(name = PROFILE)
     @Builder.Default()
     private String profile = DEFAULT_PROFILE_ROOT;
 
-    @Pattern(regexp = NAME_REGEX, message = RegexException.NAME_EXCEPTION)
-    @Column(name = NAME, nullable = false)
+    @Column(name = NAME)
     private String name;
 
     @CreationTimestamp
-    @Column(name = CREATE_DATE, nullable = false)
-    private Timestamp createDate;
+    @Column(name = CREATE_DATE)
+    @Builder.Default
+    private Timestamp createDate = new Timestamp(System.currentTimeMillis());
 
     @UpdateTimestamp
-    @Column(name = UPDATE_DATE, nullable = false)
-    private Timestamp updateDate;
+    @Column(name = UPDATE_DATE)
+    @Builder.Default
+    private Timestamp updateDate = new Timestamp(System.currentTimeMillis());
 
-    @Column(name = STATUS, nullable = false)
+    @Column(name = STATUS)
     @Builder.Default
     private String status = STATUS_ACTIVE;
 }
