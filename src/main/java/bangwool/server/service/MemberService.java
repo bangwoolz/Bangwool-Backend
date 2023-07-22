@@ -35,10 +35,10 @@ public class MemberService {
             memberRepository.save(member);
         } catch(DataIntegrityViolationException ex) {
             String errorMessage = ex.getMessage().split(PARSER)[0];
-            if (errorMessage.contains(Member.EMAIL)) {
+            if (errorMessage.contains("EMAIL")) {
                 throw new DuplicateEmailException();
             }
-            if (errorMessage.contains(Member.NICKNAME)) {
+            if (errorMessage.contains("NICKNAME")) {
                 throw new DuplicateNickNameException();
             }
         }

@@ -20,23 +20,23 @@ public class MemberSignUpRequest {
     public static final String NAME_REGEX = "^[가-힣]{2,5}$";
 
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = RegexException.NULL_EXCEPTION)
+    @NotBlank(message = RegexException.BLANK_EXCEPTION)
     @Pattern(regexp = EMAIL_REGEX, message = RegexException.EMAIL_EXCEPTION)
     private String email;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = RegexException.NULL_EXCEPTION)
+    @NotBlank(message = RegexException.BLANK_EXCEPTION)
     @Pattern(regexp = NAME_REGEX, message = RegexException.NAME_EXCEPTION)
     private String name;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = RegexException.NULL_EXCEPTION)
+    @NotBlank(message = RegexException.BLANK_EXCEPTION)
     @Pattern(regexp = NICKNAME_REGEX, message = RegexException.NICKNAME_EXCEPTION)
     private String nickname;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = RegexException.NULL_EXCEPTION)
+    @NotBlank(message = RegexException.BLANK_EXCEPTION)
     @Pattern(regexp = PASSWORD_REGEX, message = RegexException.PASSWORD_EXCEPTION)
     private String password;
 }

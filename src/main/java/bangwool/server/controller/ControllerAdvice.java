@@ -23,6 +23,7 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> processMethodArgumentError(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(1004, errorMessage));
+        int errorCode = 1004;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorCode, errorCode + errorMessage));
     }
 }

@@ -15,49 +15,40 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 public class Member {
-    public static final String ID = "ID";
-    public static final String EMAIL = "EMAIL";
-    public static final String PASSWORD = "PASSWORD";
-    public static final String NICKNAME = "NICKNAME";
-    public static final String NAME = "NAME";
-    public static final String STATUS = "STATUS";
-    public static final String PROFILE = "PROFILE";
-    public static final String CREATE_DATE = "CREATE_DATE";
-    public static final String UPDATE_DATE = "UPDATE_DATE";
     public static final String STATUS_ACTIVE = "active";
     public static final String DEFAULT_PROFILE_ROOT = "./src/main/resources/picture/tomato.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = ID, nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
-    @Column(name = EMAIL, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = PASSWORD)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = NICKNAME, unique = true)
+    @Column(name = "nickname", unique = true)
     private String nickname;
 
-    @Column(name = PROFILE)
+    @Column(name = "profile")
     @Builder.Default()
     private String profile = DEFAULT_PROFILE_ROOT;
 
-    @Column(name = NAME)
+    @Column(name = "name")
     private String name;
 
     @CreationTimestamp
-    @Column(name = CREATE_DATE)
+    @Column(name = "create_date")
     @Builder.Default
     private Timestamp createDate = new Timestamp(System.currentTimeMillis());
 
     @UpdateTimestamp
-    @Column(name = UPDATE_DATE)
+    @Column(name = "update_date")
     @Builder.Default
     private Timestamp updateDate = new Timestamp(System.currentTimeMillis());
 
-    @Column(name = STATUS)
+    @Column(name = "status")
     @Builder.Default
     private String status = STATUS_ACTIVE;
 }
