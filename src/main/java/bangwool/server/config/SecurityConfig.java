@@ -22,7 +22,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .formLogin().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
 }

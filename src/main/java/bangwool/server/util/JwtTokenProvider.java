@@ -1,6 +1,6 @@
 package bangwool.server.util;
 
-import bangwool.server.exception.JwtInvalidTokenException;
+import bangwool.server.exception.unauthorized.InvalidTokenException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,10 +11,10 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtTokenProvider {
-    @Value("${secret.jwt-secret-key}")
+    @Value("${JWT_SECRET_KEY}")
     private String JWT_SECRET_KEY;
 
-    @Value("${secret.jwt-expired-in}")
+    @Value("${JWT_EXPIRED_IN}")
     private long JWT_EXPIRED_IN;
 
     public String createToken(String principal, long userId) {       //pricipal : 유저의 이메일이 인자로 들어옴
@@ -33,7 +33,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public boolean isExpiredToken(String token) throws JwtInvalidTokenException {
+    public boolean isExpiredToken(String token) throws InvalidTokenException {
         try {
             Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(JWT_SECRET_KEY).build()

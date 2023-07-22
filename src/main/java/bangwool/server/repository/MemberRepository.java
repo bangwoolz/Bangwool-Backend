@@ -1,7 +1,6 @@
-package bangwool.server.dao;
+package bangwool.server.repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Getter
-public class MemberDao {
+public class MemberRepository {
     @PersistenceContext
     private final EntityManager em;
 

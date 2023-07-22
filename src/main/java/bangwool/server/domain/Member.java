@@ -22,7 +22,6 @@ public class Member {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
     @Pattern(regexp = EMAIL_REGEX , message = RegexException.EMAIL_EXCEPTION)
     @Column(name="email", unique = true)
     private String email;
