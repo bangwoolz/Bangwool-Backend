@@ -1,10 +1,12 @@
 package bangwool.server.domain;
 
-
-import bangwool.server.exception.RegexException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.sql.Timestamp;
+
 
 @Entity
 @Table
@@ -13,25 +15,40 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Member {
-    public static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
-    public static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^&*()])(?=\\S+$).{8,12}$";
-    public static final String NICKNAME_REGEX = "^[a-zA-Z0-9가-힣]{1,5}$";
+    public static final String STATUS_ACTIVE = "active";
+    public static final String DEFAULT_PROFILE_ROOT = "./src/main/resources/picture/tomato.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
-
-
-    @Pattern(regexp = EMAIL_REGEX , message = RegexException.EMAIL_EXCEPTION)
-    @Column(name="email", unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Pattern(regexp = PASSWORD_REGEX, message = RegexException.PASSWORD_EXCEPTION)
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
-    @Pattern(regexp = NICKNAME_REGEX, message = RegexException.NIKCNAME_EXCEPTION)
-    @Column(name="nickname", unique = true)
+    @Column(name = "nickname", unique = true)
     private String nickname;
+
+    @Column(name = "profile")
+    @Builder.Default()
+    private String profile = DEFAULT_PROFILE_ROOT;
+
+    @Column(name = "name")
+    private String name;
+
+    @CreationTimestamp
+    @Column(name = "create_date")
+    @Builder.Default
+    private Timestamp createDate = new Timestamp(System.currentTimeMillis());
+
+    @UpdateTimestamp
+    @Column(name = "update_date")
+    @Builder.Default
+    private Timestamp updateDate = new Timestamp(System.currentTimeMillis());
+
+    @Column(name = "status")
+    @Builder.Default
+    private String status = STATUS_ACTIVE;
 }
