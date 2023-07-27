@@ -12,13 +12,11 @@ import java.util.Date;
 public class JwtTokenProvider {
     private final String secretKey;
     private final long validityInMilliseconds;
-    private final JwtParser jwtParser;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
                             @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
         this.secretKey = secretKey;
         this.validityInMilliseconds = validityInMilliseconds;
-        this.jwtParser = Jwts.parser().setSigningKey(secretKey);
     }
 
     public String createToken(Long memberId) {
@@ -35,7 +33,7 @@ public class JwtTokenProvider {
 
     public void validateToken(String token) {
         try {
-            jwtParser.parseClaimsJws(token);
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
             throw new TokenExpiredException();
         } catch (JwtException e) {
@@ -45,7 +43,7 @@ public class JwtTokenProvider {
 
     public String getPayload(String token) {
         try {
-            return jwtParser.parseClaimsJws(token).getBody().getSubject();
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
         } catch (ExpiredJwtException e) {
             throw new TokenExpiredException();
         } catch (JwtException e) {
