@@ -7,28 +7,30 @@ import bangwool.server.dto.response.MemberSignUpResponse;
 import bangwool.server.exception.badreqeust.DuplicateEmailException;
 import bangwool.server.exception.badreqeust.DuplicateNickNameException;
 import bangwool.server.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     public MemberSignUpResponse save(MemberSignUpRequest memberSignUpRequest) {
         final String PARSER = "VALUES";
+        String encodedPassword = passwordEncoder.encode(memberSignUpRequest.getPassword());
+
 
         Member member = Member.builder()
                 .name(memberSignUpRequest.getName())
                 .email(memberSignUpRequest.getEmail())
                 .nickname(memberSignUpRequest.getNickname())
-                .password(memberSignUpRequest.getPassword())
+                .password(encodedPassword)
                 .build();
 
         try {
