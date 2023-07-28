@@ -1,11 +1,10 @@
-package bangwool.server.dto.request;
+package bangwool.server.dto.response;
 
 
+import bangwool.server.domain.Ppomodoro;
 import bangwool.server.exception.RegexException;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +15,9 @@ import java.time.LocalTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PpomodoroRequest {
-    @NotNull(message = RegexException.NULL_EXCEPTION)
-    @NotBlank(message = RegexException.BLANK_EXCEPTION)
+public class PpomodoroFindResponse {
     private String name;
 
-    @NotNull(message = RegexException.NULL_EXCEPTION)
-    @NotBlank(message = RegexException.BLANK_EXCEPTION)
     private String color;
 
     @NotNull(message = RegexException.NULL_EXCEPTION)
@@ -33,4 +28,9 @@ public class PpomodoroRequest {
 
     @NotNull(message = RegexException.NULL_EXCEPTION)
     private int restTime;
+
+
+    public static PpomodoroFindResponse of(Ppomodoro ppomodoro) {
+        return new PpomodoroFindResponse(ppomodoro.getName(), ppomodoro.getColor(), ppomodoro.getWorkHour(), ppomodoro.getWorkMin(), ppomodoro.getRestTime());
+    }
 }

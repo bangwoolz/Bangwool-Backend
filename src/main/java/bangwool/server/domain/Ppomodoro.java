@@ -1,5 +1,6 @@
 package bangwool.server.domain;
 
+import bangwool.server.dto.request.PpomodoroRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,14 +25,30 @@ public class Ppomodoro {
 
     private String color;
 
-    private LocalTime workTime;
+    private int workHour;
+
+    private int workMin;
 
     private int restTime;
 
-    public Ppomodoro(String name, String color, LocalTime workTime, int restTime) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public Ppomodoro(String name, String color, int workHour, int workMin, int restTime, Member member) {
         this.name = name;
         this.color = color;
-        this.workTime = workTime;
+        this.workHour = workHour;
+        this.workMin = workMin;
         this.restTime = restTime;
+        this.member = member;
+    }
+
+    public void update(PpomodoroRequest ppomodoroRequest) {
+        this.name = ppomodoroRequest.getName();
+        this.color = ppomodoroRequest.getColor();
+        this.workHour = ppomodoroRequest.getWorkHour();
+        this.workMin = ppomodoroRequest.getWorkMin();
+        this.restTime = ppomodoroRequest.getRestTime();
     }
 }
