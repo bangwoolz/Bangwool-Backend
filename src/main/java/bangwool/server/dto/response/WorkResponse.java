@@ -11,9 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class WorkResponse {
+
     private Long id;
 
-    public static WorkResponse from(Work work) {
-        return new WorkResponse(work.getId());
-    }
 }
