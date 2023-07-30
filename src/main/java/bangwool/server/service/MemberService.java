@@ -7,7 +7,6 @@ import bangwool.server.dto.response.MemberSignUpResponse;
 import bangwool.server.exception.badreqeust.DuplicateEmailException;
 import bangwool.server.exception.badreqeust.DuplicateNickNameException;
 import bangwool.server.repository.MemberRepository;
-import bangwool.server.security.auth.LoginUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
