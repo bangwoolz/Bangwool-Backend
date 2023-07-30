@@ -31,7 +31,6 @@ public class PpomodoroService {
 
     @Transactional
     public PpomodoroResponse update(Long ppomodoroId, PpomodoroRequest ppomodoroRequest) {
-
         Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId).orElseThrow(NotFoundPpomodororException::new);
 
         ppomodoro.update(ppomodoroRequest);
