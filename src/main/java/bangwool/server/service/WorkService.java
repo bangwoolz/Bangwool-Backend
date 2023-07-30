@@ -13,7 +13,6 @@ import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.PpomodoroRepository;
 import bangwool.server.repository.WorkRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +30,10 @@ public class WorkService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public WorkResponse save(Long memberId, WorkRequest request) {
-        Member member = memberRepository.findById(memberId)
+    public WorkResponse save(Long memberId, Long ppomodoroId, WorkRequest request) {
+        memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
-        Ppomodoro ppomodoro = ppomodoroRepository.findById(request.getPpomodoroId())
+        Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId)
                 .orElseThrow(NotFoundPpomodororException::new);
         Work work = workRepository.save(Work.builder()
                 .workedHour(request.getWorkedHour())
@@ -49,8 +48,10 @@ public class WorkService {
     //todo r : 오늘의 뽀모도로 어떻게 했는지? -> 통계자료 만들어서, 랭킹
 
     public WorksTodayResponse findTodayPpomodoro(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
-        List<WorkTodayResponse> todayWorkedPpomodoro = workRepository.findTodayWorkByMemberId(memberId, Date.valueOf(LocalDate.now()));
+       memberRepository.findById(memberId)
+               .orElseThrow(NotFoundMemberException::new);
+        List<WorkTodayResponse> todayWorkedPpomodoro = workRepository
+                .findTodayWorkByMemberId(memberId, Date.valueOf(LocalDate.now()));
         return new WorksTodayResponse(todayWorkedPpomodoro);
     }
 }

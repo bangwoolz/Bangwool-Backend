@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,17 +24,19 @@ public class WorkController {
 
     @Operation(summary = "작업 완료 기록")
     @SecurityRequirement(name = "JWT")
-    @PostMapping()
+    @PostMapping("/{ppomodoroId}")
     public ResponseEntity<WorkResponse> createWorkingTime(
             @LoginUserId Long memberId,
-            @Valid @RequestBody WorkRequest workRequest) {
-        return ResponseEntity.ok(workService.save(memberId, workRequest));
+            @Valid @RequestBody WorkRequest workRequest,
+            @PathVariable Long ppomodoroId) {
+        WorkResponse workResponse = workService.save(memberId, ppomodoroId, workRequest);
+        return ResponseEntity.ok(workResponse);
     }
 
-    @Operation (summary = "작업 사항 반환")
+    @Operation (summary = "오늘 작업 반환")
     @SecurityRequirement(name = "JWT")
-    @GetMapping
-    public ResponseEntity<WorksTodayResponse> updateTime(
+    @GetMapping("/today")
+    public ResponseEntity<WorksTodayResponse> todayWork(
             @LoginUserId Long memberId) {
         return ResponseEntity.ok(workService.findTodayPpomodoro(memberId));
     }
