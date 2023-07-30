@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkRequest {
     @NotNull(message = RegexException.NULL_EXCEPTION)
-    private Long ppomodoroId;
-    @NotNull(message = RegexException.NULL_EXCEPTION)
     private int workedHour;
     @NotNull(message = RegexException.NULL_EXCEPTION)
     private int workedMin;
