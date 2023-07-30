@@ -1,6 +1,5 @@
 package bangwool.server.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,7 +17,7 @@ public class WorkTodayResponse {
     public WorkTodayResponse(Long ppomodoroId, String name, int workHour, int workMin) {
         this.ppomodoroId = ppomodoroId;
         this.name = name;
-        this.workHour = workHour;
-        this.workMin = workMin;
+        this.workHour = workHour + workMin / 60;
+        this.workMin = workMin % 60;
     }
 }
