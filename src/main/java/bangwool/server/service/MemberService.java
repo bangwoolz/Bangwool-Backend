@@ -49,4 +49,5 @@ public class MemberService {
 
         return new MemberSignUpResponse(member.getId());
     }
+
 }

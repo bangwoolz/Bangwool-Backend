@@ -26,4 +26,5 @@ public class AuthController {
         TokenResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
+
 }

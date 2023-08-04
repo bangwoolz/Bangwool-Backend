@@ -3,7 +3,9 @@ package bangwool.server.config;
 import bangwool.server.security.auth.AuthenticationPrincipalArgumentResolver;
 import bangwool.server.security.auth.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -31,4 +33,5 @@ public class AuthConfig implements WebMvcConfigurer {
         resolvers.add(authenticationPrincipalArgumentResolver);
         WebMvcConfigurer.super.addArgumentResolvers(resolvers);
     }
+
 }

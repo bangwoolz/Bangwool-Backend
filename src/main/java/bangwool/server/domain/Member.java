@@ -51,4 +51,12 @@ public class Member {
     @Column(name = "status")
     @Builder.Default
     private String status = STATUS_ACTIVE;
+
+    @Column(name = "platform")
+    private Platform platform;
+
+    @Column(name = "platform_id")
+    private Long platformId;
+
+
 }
