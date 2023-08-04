@@ -1,11 +1,16 @@
 package bangwool.server.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+
+import static bangwool.server.domain.Member.STATUS_ACTIVE;
 
 
 @Entity
@@ -13,30 +18,17 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
-    public static final String STATUS_ACTIVE = "active";
-    public static final String DEFAULT_PROFILE_ROOT = "./src/main/resources/picture/tomato.png";
+public class Work {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)
     private Long id;
-    @Column(name = "email", unique = true)
-    private String email;
-
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "nickname", unique = true)
-    private String nickname;
-
-    @Column(name = "profile")
-    @Builder.Default()
-    private String profile = DEFAULT_PROFILE_ROOT;
-
-    @Column(name = "name")
-    private String name;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ppomodoro_id")
+    private Ppomodoro ppomodoro;
+    private int workedHour;
+    private int workedMin;
     @CreationTimestamp
     @Column(name = "create_date")
     @Builder.Default
@@ -50,12 +42,4 @@ public class Member {
     @Column(name = "status")
     @Builder.Default
     private String status = STATUS_ACTIVE;
-
-    @Column(name = "platform")
-    private Platform platform;
-
-    @Column(name = "platform_id")
-    private Long platformId;
-
-
 }
