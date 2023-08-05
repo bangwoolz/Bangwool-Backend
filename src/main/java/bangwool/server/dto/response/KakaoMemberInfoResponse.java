@@ -1,5 +1,6 @@
 package bangwool.server.dto.response;
 import bangwool.server.domain.Platform;
+import bangwool.server.dto.KakaoUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,17 +13,13 @@ import lombok.NoArgsConstructor;
 public class KakaoMemberInfoResponse {
 
     private Platform platform = Platform.KAKAO;
-    private String token;
-    private Long platformId;
-    private String profileImage;
-    private String nickname;
+    private Long id;
     private String email;
 
-    public KakaoMemberInfoResponse(Long platformId, String token, String profileImage, String nickname, String email) {
-        this.platformId = platformId;
-        this.token = token;
-        this.profileImage = profileImage;
-        this.nickname = nickname;
-        this.email = email;
+    public static KakaoMemberInfoResponse of(KakaoUser kakaoUser) {
+        return new KakaoMemberInfoResponse(
+                Platform.KAKAO, kakaoUser.getId(), kakaoUser.getEmail()
+        );
     }
+
 }
