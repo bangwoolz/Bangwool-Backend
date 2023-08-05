@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +20,17 @@ import org.springframework.web.bind.annotation.*;
 public class KakaoAuthController {
 
     private final AuthService authService;
-    private final MemberService memberService;
+    @Value("${kakao.api-key}") String clientId;
+    @Value("${kakao.redirect-uri}") String redirectUri;
 
     @Operation(summary = "카카오 인카 코드 발급받기")
     @GetMapping("/oauth/authorize")
     public String kakaoConnect(){
         StringBuffer url = new StringBuffer();
+
         url.append("https://kauth.kakao.com/oauth/authorize?");
-        url.append("clinet_id="+"${kakao.client-id}");
-        url.append("&redirect_uri=${kakao.redirect-uri}");
+        url.append("client_id="+clientId);
+        url.append("&redirect_uri="+redirectUri);
         url.append("&response_type=code");
 
         return "redirect:" + url;
@@ -35,10 +38,10 @@ public class KakaoAuthController {
 
     @Operation(summary = "카카오 토큰 발급받기")
     @GetMapping("/callback")
-    public ResponseEntity<OAuthTokenResponse> kakaoLogin(@RequestBody KakaoLoginRequest request){
-        String kakaoToken = authService.getKakaoToken(request);
-        KakaoMemberInfoResponse memberInfo = authService.getKakaoMemberInfo(kakaoToken);
-        OAuthTokenResponse response = authService.kakaoLogin(memberInfo);
+    public ResponseEntity<OAuthTokenResponse> kakaoLogin(@RequestParam String code){
+        String kakaoToken = authService.getKakaoToken(code);
+        //KakaoMemberInfoResponse memberInfo = authService.getKakaoMemberInfo(kakaoToken);
+        OAuthTokenResponse response = authService.kakaoLogin(authService.getKakaoMemberInfo(kakaoToken));
         return ResponseEntity.ok(response);
     }
 
