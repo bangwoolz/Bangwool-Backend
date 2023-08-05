@@ -3,6 +3,9 @@ package bangwool.server.service;
 
 import bangwool.server.domain.Member;
 import bangwool.server.dto.request.MemberSignUpRequest;
+import bangwool.server.dto.request.MemberValidEmailRequest;
+import bangwool.server.dto.request.MemberValidNicknameRequest;
+import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
 import bangwool.server.exception.badreqeust.DuplicateEmailException;
 import bangwool.server.exception.badreqeust.DuplicateNickNameException;
@@ -48,6 +51,22 @@ public class MemberService {
         }
 
         return new MemberSignUpResponse(member.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public ExistResponse isExistMemberByEmail(String email) {
+        if (memberRepository.findByEmail(email).isPresent()){
+            return new ExistResponse(true);
+        }
+        return new ExistResponse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public ExistResponse isExistMemberByNickname(String nickname) {
+        if (memberRepository.findByNickname(nickname).isPresent()){
+            return new ExistResponse(true);
+        }
+        return new ExistResponse(false);
     }
 
 }
