@@ -2,8 +2,8 @@ package bangwool.server.controller;
 
 
 import bangwool.server.dto.request.WorkRequest;
-import bangwool.server.dto.response.WorkResponse;
-import bangwool.server.dto.response.WorksTodayResponse;
+import bangwool.server.dto.request.YearMonthRequest;
+import bangwool.server.dto.response.*;
 import bangwool.server.security.auth.LoginUserId;
 import bangwool.server.service.WorkService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +40,43 @@ public class WorkController {
             @LoginUserId Long memberId) {
         return ResponseEntity.ok(workService.findTodayPpomodoro(memberId));
     }
+
+    @Operation(summary = "월간 통계 반환")
+    @SecurityRequirement(name = "JWT")
+    @PostMapping("/month")
+    public ResponseEntity<WorksMonthResponse> monthWork(@LoginUserId Long memberId,
+                                                        @RequestBody YearMonthRequest yearMonthRequest) {
+        WorksMonthResponse worksMonthResponse = workService.findMonthPpomodoro(memberId,
+                yearMonthRequest.getYear(),
+                yearMonthRequest.getMonth());
+        return ResponseEntity.ok(sumSameDayWork(worksMonthResponse));
+    }
+
+    private WorksMonthResponse sumSameDayWork(WorksMonthResponse workMonthResponses) {
+        WorksMonthResponse worksMonthResponse = new WorksMonthResponse();
+        WorkMonthResponse workMonthResponse = null;
+
+        for(WorkMonthResponse w : workMonthResponses.getWorks()) {
+            if(workMonthResponse == null) {
+                workMonthResponse = w;
+                continue;
+            }
+            if(!isSameDay(workMonthResponse, w)) {
+                worksMonthResponse.addWorkMonth(workMonthResponse);
+                workMonthResponse = w;
+                continue;
+            }
+            workMonthResponse.addTime(w.getWorkHour(), w.getWorkMin());
+        }
+        worksMonthResponse.addWorkMonth(workMonthResponse);
+
+        return worksMonthResponse;
+    }
+
+    private boolean isSameDay(WorkMonthResponse baseDay, WorkMonthResponse comparedDay) {
+        return (comparedDay.getCreateDate().getDay() == baseDay.getCreateDate().getDay()) ||
+                comparedDay.getCreateDate().getHours() <= 6;
+    }
+
 
 }
