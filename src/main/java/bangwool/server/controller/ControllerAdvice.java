@@ -10,6 +10,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.DateTimeException;
+
+import static bangwool.server.exception.RegexException.DAY_EXCEPTION;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -25,5 +29,9 @@ public class ControllerAdvice {
         String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         int errorCode = 1004;
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorCode, errorCode + errorMessage));
+    }
+    @ExceptionHandler(DateTimeException.class)
+    public ResponseEntity<ErrorResponse> processDateTimeError(DateTimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(10000, DAY_EXCEPTION));
     }
 }

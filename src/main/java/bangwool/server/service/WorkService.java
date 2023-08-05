@@ -28,6 +28,12 @@ public class WorkService {
     private final PpomodoroRepository ppomodoroRepository;
     private final MemberRepository memberRepository;
 
+    private final int START_HOUR_OF_DAY = 6;
+    private final int START_MIN_OF_DAY = 0;
+    private final int START_SEC_OF_DAY = 0;
+    private final int START_DAY_OF_MONTH = 1;
+
+
     @Transactional
     public WorkResponse save(Long memberId, Long ppomodoroId, WorkRequest request) {
         memberRepository.findById(memberId)
@@ -53,18 +59,61 @@ public class WorkService {
         return new WorksTodayResponse(todayWorkedPpomodoro);
     }
 
+
     public WorksMonthResponse findMonthPpomodoro(Long memberId,int year, int month) {
         memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
 
-        Timestamp baseMonth = Timestamp.valueOf(LocalDateTime.of(year,month,1,6,0));
-        Timestamp endMonth = Timestamp.valueOf(LocalDateTime.of(year, month+1, 1, 6, 0));
-        return sumSameDayWork(
+        Timestamp baseMonth = Timestamp.valueOf(LocalDateTime.of(year, month,
+                START_DAY_OF_MONTH, START_HOUR_OF_DAY,START_MIN_OF_DAY));
+        Timestamp endMonth = Timestamp.valueOf(LocalDateTime.of(year, month+1,
+                START_DAY_OF_MONTH, START_HOUR_OF_DAY, START_MIN_OF_DAY));
+        return sumMonthWorkByDay(
                 new WorksMonthResponse(workRepository.findMonthWorkByMemberId(memberId, baseMonth, endMonth))
         );
     }
 
-    private WorksMonthResponse sumSameDayWork(WorksMonthResponse workMonthResponses) {
+    public WorksWeekResponse findWeekPpomodoro(Long memberId) {
+        memberRepository.findById(memberId)
+                .orElseThrow(NotFoundMemberException::new);
+
+        int currentWeek = LocalDateTime.now().getDayOfWeek().getValue() - 1;
+
+        Timestamp baseWeek = Timestamp.valueOf(LocalDateTime.now()
+                .minusDays(currentWeek)
+                .toLocalDate()
+                .atTime(START_HOUR_OF_DAY, START_MIN_OF_DAY, START_SEC_OF_DAY));
+
+        List<WorkWeekResponse> workWeekResponses = workRepository
+                .findWeekWorkByMemberId(memberId, baseWeek);
+
+        return sumWeekWorkByDay(
+                new WorksWeekResponse(workWeekResponses)
+        );
+    }
+
+    private WorksWeekResponse sumWeekWorkByDay(WorksWeekResponse workWeekResponses) {
+        WorksWeekResponse worksWeekResponse = new WorksWeekResponse();
+        WorkWeekResponse workWeekResponse = null;
+
+        for(WorkWeekResponse w : workWeekResponses.getWorks()) {
+            if(workWeekResponse == null) {
+                workWeekResponse = w;
+                continue;
+            }
+            if(!isSameDay(workWeekResponse.getCreateDate(), w.getCreateDate())) {
+                worksWeekResponse.addWorkMonth(workWeekResponse);
+                workWeekResponse = w;
+                continue;
+            }
+            workWeekResponse.addTime(w.getWorkHour(), w.getWorkMin());
+        }
+        worksWeekResponse.addWorkMonth(workWeekResponse);
+
+        return worksWeekResponse;
+    }
+
+    private WorksMonthResponse sumMonthWorkByDay(WorksMonthResponse workMonthResponses) {
         WorksMonthResponse worksMonthResponse = new WorksMonthResponse();
         WorkMonthResponse workMonthResponse = null;
 
@@ -73,7 +122,7 @@ public class WorkService {
                 workMonthResponse = w;
                 continue;
             }
-            if(!isSameDay(workMonthResponse, w)) {
+            if(!isSameDay(workMonthResponse.getCreateDate(), w.getCreateDate())) {
                 worksMonthResponse.addWorkMonth(workMonthResponse);
                 workMonthResponse = w;
                 continue;
@@ -85,9 +134,9 @@ public class WorkService {
         return worksMonthResponse;
     }
 
-    private boolean isSameDay(WorkMonthResponse baseDay, WorkMonthResponse comparedDay) {
-        return (comparedDay.getCreateDate().getDay() == baseDay.getCreateDate().getDay()) ||
-                comparedDay.getCreateDate().getHours() < 6;
+    private boolean isSameDay(Timestamp baseDay, Timestamp comparedDay) {
+        return (comparedDay.getDay() == baseDay.getDay()) ||
+                comparedDay.getHours() < 6;
     }
 
 

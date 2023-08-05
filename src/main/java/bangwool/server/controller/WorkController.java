@@ -52,6 +52,14 @@ public class WorkController {
         return ResponseEntity.ok(worksMonthResponse);
     }
 
+    @Operation(summary = "주간 통계 반환")
+    @SecurityRequirement(name = "JWT")
+    @GetMapping("/week")
+    public ResponseEntity<WorksWeekResponse> weekWork(@LoginUserId Long memberId) {
+        return ResponseEntity.ok(workService.findWeekPpomodoro(memberId));
+    }
+
+
 
 
 
