@@ -7,7 +7,7 @@ import bangwool.server.dto.response.PpomodoroFindResponse;
 import bangwool.server.dto.response.PpomodoroResponse;
 import bangwool.server.dto.response.PpomodorosResponse;
 import bangwool.server.exception.notfound.NotFoundMemberException;
-import bangwool.server.exception.notfound.NotFoundPpomodororException;
+import bangwool.server.exception.notfound.NotFoundPpomodoroException;
 import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.PpomodoroRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class PpomodoroService {
 
     @Transactional
     public PpomodoroResponse update(Long ppomodoroId, PpomodoroRequest ppomodoroRequest) {
-        Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId).orElseThrow(NotFoundPpomodororException::new);
+        Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId).orElseThrow(NotFoundPpomodoroException::new);
 
         ppomodoro.update(ppomodoroRequest);
         return new PpomodoroResponse(ppomodoro.getId());
@@ -39,7 +39,7 @@ public class PpomodoroService {
 
     @Transactional
     public void delete(Long ppomodoroId) {
-        Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId).orElseThrow(NotFoundPpomodororException::new);
+        Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId).orElseThrow(NotFoundPpomodoroException::new);
 
         ppomodoroRepository.delete(ppomodoro);
     }
