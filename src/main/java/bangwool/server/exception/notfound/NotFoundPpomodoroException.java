@@ -3,9 +3,9 @@ package bangwool.server.exception.notfound;
 import lombok.Getter;
 
 @Getter
-public class NotFoundPpomodororException extends NotFoundException {
+public class NotFoundPpomodoroException extends NotFoundException {
 
-    public NotFoundPpomodororException() {
+    public NotFoundPpomodoroException() {
         super("존재하지 뽀모도로입니다.", 2001);
     }
 }
