@@ -12,6 +12,7 @@ import bangwool.server.exception.badreqeust.DuplicateNickNameException;
 import bangwool.server.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.JDBCException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class MemberService {
 
         try {
             memberRepository.save(member);
-        } catch(DataIntegrityViolationException ex) {
+        } catch(DataIntegrityViolationException | JDBCException ex) {
             String errorMessage = ex.getMessage().split(PARSER)[0];
             if (errorMessage.contains("EMAIL")) {
                 throw new DuplicateEmailException();
