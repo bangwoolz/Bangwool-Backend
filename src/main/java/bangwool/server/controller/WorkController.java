@@ -49,34 +49,10 @@ public class WorkController {
         WorksMonthResponse worksMonthResponse = workService.findMonthPpomodoro(memberId,
                 yearMonthRequest.getYear(),
                 yearMonthRequest.getMonth());
-        return ResponseEntity.ok(sumSameDayWork(worksMonthResponse));
+        return ResponseEntity.ok(worksMonthResponse);
     }
 
-    private WorksMonthResponse sumSameDayWork(WorksMonthResponse workMonthResponses) {
-        WorksMonthResponse worksMonthResponse = new WorksMonthResponse();
-        WorkMonthResponse workMonthResponse = null;
 
-        for(WorkMonthResponse w : workMonthResponses.getWorks()) {
-            if(workMonthResponse == null) {
-                workMonthResponse = w;
-                continue;
-            }
-            if(!isSameDay(workMonthResponse, w)) {
-                worksMonthResponse.addWorkMonth(workMonthResponse);
-                workMonthResponse = w;
-                continue;
-            }
-            workMonthResponse.addTime(w.getWorkHour(), w.getWorkMin());
-        }
-        worksMonthResponse.addWorkMonth(workMonthResponse);
-
-        return worksMonthResponse;
-    }
-
-    private boolean isSameDay(WorkMonthResponse baseDay, WorkMonthResponse comparedDay) {
-        return (comparedDay.getCreateDate().getDay() == baseDay.getCreateDate().getDay()) ||
-                comparedDay.getCreateDate().getHours() <= 6;
-    }
 
 
 }

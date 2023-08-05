@@ -3,10 +3,7 @@ package bangwool.server.service;
 import bangwool.server.domain.Ppomodoro;
 import bangwool.server.domain.Work;
 import bangwool.server.dto.request.WorkRequest;
-import bangwool.server.dto.response.WorkResponse;
-import bangwool.server.dto.response.WorkTodayResponse;
-import bangwool.server.dto.response.WorksMonthResponse;
-import bangwool.server.dto.response.WorksTodayResponse;
+import bangwool.server.dto.response.*;
 import bangwool.server.exception.notfound.NotFoundMemberException;
 import bangwool.server.exception.notfound.NotFoundPpomodoroException;
 import bangwool.server.repository.MemberRepository;
@@ -62,8 +59,35 @@ public class WorkService {
 
         Timestamp baseMonth = Timestamp.valueOf(LocalDateTime.of(year,month,1,6,0));
         Timestamp endMonth = Timestamp.valueOf(LocalDateTime.of(year, month+1, 1, 6, 0));
+        return sumSameDayWork(
+                new WorksMonthResponse(workRepository.findMonthWorkByMemberId(memberId, baseMonth, endMonth))
+        );
+    }
 
-        return new WorksMonthResponse(workRepository.findMonthWorkByMemberId(memberId, baseMonth, endMonth));
+    private WorksMonthResponse sumSameDayWork(WorksMonthResponse workMonthResponses) {
+        WorksMonthResponse worksMonthResponse = new WorksMonthResponse();
+        WorkMonthResponse workMonthResponse = null;
+
+        for(WorkMonthResponse w : workMonthResponses.getWorks()) {
+            if(workMonthResponse == null) {
+                workMonthResponse = w;
+                continue;
+            }
+            if(!isSameDay(workMonthResponse, w)) {
+                worksMonthResponse.addWorkMonth(workMonthResponse);
+                workMonthResponse = w;
+                continue;
+            }
+            workMonthResponse.addTime(w.getWorkHour(), w.getWorkMin());
+        }
+        worksMonthResponse.addWorkMonth(workMonthResponse);
+
+        return worksMonthResponse;
+    }
+
+    private boolean isSameDay(WorkMonthResponse baseDay, WorkMonthResponse comparedDay) {
+        return (comparedDay.getCreateDate().getDay() == baseDay.getCreateDate().getDay()) ||
+                comparedDay.getCreateDate().getHours() < 6;
     }
 
 
