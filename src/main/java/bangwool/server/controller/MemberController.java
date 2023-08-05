@@ -1,6 +1,8 @@
 package bangwool.server.controller;
 
 import bangwool.server.dto.request.MemberSignUpRequest;
+import bangwool.server.dto.request.MemberValidNicknameRequest;
+import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
 import bangwool.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,4 +30,15 @@ public class MemberController {
         return ResponseEntity.ok(memberSignUpResponse);
     }
 
+    @Operation(summary = "메일 중복 확인")
+    @GetMapping("/exist/email")
+    public ResponseEntity<ExistResponse> validMemberByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(memberService.isExistMemberByEmail(email));
+    }
+
+    @Operation(summary = "닉네임 중복 확인")
+    @GetMapping("/exist/nickname")
+    public ResponseEntity<ExistResponse> validMemberByNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(memberService.isExistMemberByNickname(nickname));
+    }
 }
