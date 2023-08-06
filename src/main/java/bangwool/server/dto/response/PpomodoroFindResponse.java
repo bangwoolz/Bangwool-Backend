@@ -16,6 +16,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PpomodoroFindResponse {
+    private Long id;
+
     private String name;
 
     private String color;
@@ -31,6 +33,6 @@ public class PpomodoroFindResponse {
 
 
     public static PpomodoroFindResponse of(Ppomodoro ppomodoro) {
-        return new PpomodoroFindResponse(ppomodoro.getName(), ppomodoro.getColor(), ppomodoro.getWorkHour(), ppomodoro.getWorkMin(), ppomodoro.getRestTime());
+        return new PpomodoroFindResponse(ppomodoro.getId(), ppomodoro.getName(), ppomodoro.getColor(), ppomodoro.getWorkHour(), ppomodoro.getWorkMin(), ppomodoro.getRestTime());
     }
 }
