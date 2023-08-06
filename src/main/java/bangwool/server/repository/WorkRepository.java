@@ -28,5 +28,4 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
             + "from Work w join w.ppomodoro p " +
             "where p.member.id = :memberId and w.createDate >= :week")
     List<WorkWeekResponse> findWeekWorkByMemberId(Long memberId, Timestamp week);
-
 }

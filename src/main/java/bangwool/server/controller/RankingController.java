@@ -1,6 +1,5 @@
 package bangwool.server.controller;
 
-
 import bangwool.server.dto.request.PpomodoroRequest;
 import bangwool.server.dto.response.PpomodoroResponse;
 import bangwool.server.dto.response.PpomodorosResponse;
@@ -21,30 +20,62 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/ranking")
 @Slf4j
 public class RankingController {
-  
-    private final RankingService rankingService;
 
-    @Operation(summary = "일간 랭킹 조회")
-    @PostMapping("/day")
-    @SecurityRequirement(name = "JWT")
-    public ResponseEntity<RankingResponses> getRankByDay(
-            @LoginUserId Long memberId,
-            @RequestBody RankingRequest rankingRequest) {
-
-        return ResponseEntity.ok(
-                rankingService.getDayRanking(rankingRequest.getStart(), rankingRequest.getEnd())
-        );
-    }
-
-    @Operation(summary = "주간 랭킹 조회")
-    @PostMapping("/week")
-    public ResponseEntity<RankingResponses> getRankByWeek(
-            @LoginUserId Long memberId,
-            @RequestBody RankingRequest rankingRequest) {
-        return ResponseEntity.ok(
-                rankingService.getWeekRanking(rankingRequest.getStart(), rankingRequest.getEnd())
-        );
-    }
-}
 }
 
+//@Tag(name = "Ppomodoro", description = "뽀모도로")
+//@RestController
+//@RequiredArgsConstructor
+//@RequestMapping("/ppomodoros")
+//@Slf4j
+//public class PpomodoroController {
+//
+//    private final PpomodoroService ppomodoroService;
+//
+//    @Operation(summary = "등록")
+//    @SecurityRequirement(name = "JWT")
+//    @PostMapping
+//    public ResponseEntity<PpomodoroResponse> save(
+//            @LoginUserId Long memberId,
+//            @Valid @RequestBody PpomodoroRequest ppomodoroRequest
+//    ) {
+//        PpomodoroResponse ppomodoroResponse = ppomodoroService.save(memberId, ppomodoroRequest);
+//
+//        return ResponseEntity.ok(ppomodoroResponse);
+//    }
+//
+//    @Operation(summary = "조회")
+//    @SecurityRequirement(name = "JWT")
+//    @GetMapping
+//    public ResponseEntity<PpomodorosResponse> findAll(
+//            @LoginUserId Long memberId
+//    ) {
+//        PpomodorosResponse ppomodoros = ppomodoroService.findAll(memberId);
+//
+//        return ResponseEntity.ok(ppomodoros);
+//    }
+//
+//    @Operation(summary = "수정")
+//    @SecurityRequirement(name = "JWT")
+//    @PutMapping("/{ppomodoroId}")
+//    public ResponseEntity<PpomodoroResponse> update(
+//            @LoginUserId Long memberId,
+//            @Valid @RequestBody PpomodoroRequest ppomodoroRequest,
+//            @PathVariable Long ppomodoroId
+//    ) {
+//        PpomodoroResponse ppomodoroResponse = ppomodoroService.update(ppomodoroId, ppomodoroRequest);
+//
+//        return ResponseEntity.ok(ppomodoroResponse);
+//    }
+//
+//    @Operation(summary = "삭제")
+//    @SecurityRequirement(name = "JWT")
+//    @DeleteMapping("/{ppomodoroId}")
+//    public ResponseEntity<Void> delete(
+//            @LoginUserId Long memberId,
+//            @PathVariable Long ppomodoroId
+//    ) {
+//        ppomodoroService.delete(ppomodoroId);
+//        return ResponseEntity.ok().build();
+//    }
+//}
