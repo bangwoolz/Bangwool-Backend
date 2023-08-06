@@ -52,7 +52,4 @@ public class RankingService {
     public RankingResponses getDayRanking(int start, int end) {
         return new RankingResponses(rankingRepository.findRankByDay(start, end));
     }
-
-
-
 }

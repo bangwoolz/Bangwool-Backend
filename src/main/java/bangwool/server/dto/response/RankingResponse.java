@@ -1,5 +1,6 @@
 package bangwool.server.dto.response;
 
+import bangwool.server.domain.Ranking;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
