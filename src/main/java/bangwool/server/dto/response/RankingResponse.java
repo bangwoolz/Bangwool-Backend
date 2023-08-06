@@ -6,12 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class RankingResponse {
-    private List<Ranking> rankingList;
+
+
+    private int rank;
+    private String nickname;
+    private int workedHour;
+    private int workedMin;
+
+    public RankingResponse(int rank, String nickname, int workedMin) {
+        this.rank = rank;
+        this.nickname = nickname;
+        this.workedMin = workedMin % 60;
+        this.workedHour = workedMin / 60;
+    }
 }
