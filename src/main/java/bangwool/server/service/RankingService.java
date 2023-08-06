@@ -29,7 +29,7 @@ public class RankingService {
     private final int START_SEC_OF_DAY = 0;
 
     @Scheduled(cron = "0 0 * * * *")
-    private void updateRanking() {
+    protected void updateRanking() {
 
         int currentWeek = LocalDateTime.now().getDayOfWeek().getValue() - 1;
 

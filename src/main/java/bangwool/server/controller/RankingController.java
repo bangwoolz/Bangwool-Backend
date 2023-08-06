@@ -20,12 +20,13 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class RankingController {
 
-    RankingService rankingService;
+    private final RankingService rankingService;
+
     @Operation(summary = "일간 랭킹 조회")
-    @GetMapping("/day")
+    @PostMapping("/day")
     @SecurityRequirement(name = "JWT")
     public ResponseEntity<RankingResponses> getRankByDay(
-            @LoginUserId Member member,
+            @LoginUserId Long memberId,
             @RequestBody RankingRequest rankingRequest) {
 
         return ResponseEntity.ok(
@@ -34,8 +35,10 @@ public class RankingController {
     }
 
     @Operation(summary = "주간 랭킹 조회")
-    @GetMapping("/week")
-    public ResponseEntity<RankingResponses> getRankByWeek(@RequestBody RankingRequest rankingRequest) {
+    @PostMapping("/week")
+    public ResponseEntity<RankingResponses> getRankByWeek(
+            @LoginUserId Long memberId,
+            @RequestBody RankingRequest rankingRequest) {
         return ResponseEntity.ok(
                 rankingService.getWeekRanking(rankingRequest.getStart(), rankingRequest.getEnd())
         );
