@@ -21,13 +21,6 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)
     private Long id;
-<<<<<<< HEAD
-    @Column(name = "email", unique = true)
-=======
-
-    @Pattern(regexp = EMAIL_REGEX , message = RegexException.EMAIL_EXCEPTION)
-    @Column(name="email", unique = true)
->>>>>>> 8b4bbef620e4fbc16c332e779782f67ae7209fce
     private String email;
 
     @Column(name = "password")

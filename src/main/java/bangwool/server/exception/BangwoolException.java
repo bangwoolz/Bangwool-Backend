@@ -5,10 +5,6 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class BangwoolException extends RuntimeException{
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b4bbef620e4fbc16c332e779782f67ae7209fce
     private final HttpStatus httpStatus;
     private final String message;
     private final int code;

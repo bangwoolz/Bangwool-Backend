@@ -20,29 +20,36 @@ import org.springframework.web.bind.annotation.*;
 public class KakaoAuthController {
 
     private final AuthService authService;
-    @Value("${kakao.api-key}") String clientId;
-    @Value("${kakao.redirect-uri}") String redirectUri;
+    @Value("${kakao.api-key}")
+    String clientId;
+    @Value("${kakao.redirect-uri}")
+    String redirectUri;
 
-    @Operation(summary = "카카오 인카 코드 발급받기")
-    @GetMapping("/oauth/authorize")
-    public String kakaoConnect(){
-        StringBuffer url = new StringBuffer();
-
-        url.append("https://kauth.kakao.com/oauth/authorize?");
-        url.append("client_id="+clientId);
-        url.append("&redirect_uri="+redirectUri);
-        url.append("&response_type=code");
-
-        return "redirect:" + url;
-    }
+//    @Operation(summary = "카카오 인카 코드 발급받기")
+//    @GetMapping("/oauth/authorize")
+//    public String kakaoConnect(){
+//        StringBuffer url = new StringBuffer();
+//
+//        url.append("https://kauth.kakao.com/oauth/authorize?");
+//        url.append("client_id="+clientId);
+//        url.append("&redirect_uri="+redirectUri);
+//        url.append("&response_type=code");
+//
+//        return "redirect:" + url;
+//    }
 
     @Operation(summary = "카카오 토큰 발급받기")
     @GetMapping("/callback")
-    public ResponseEntity<OAuthTokenResponse> kakaoLogin(@RequestParam String code){
+    public String kakaoToken(@RequestParam String code) {
         String kakaoToken = authService.getKakaoToken(code);
+        return kakaoToken;
         //KakaoMemberInfoResponse memberInfo = authService.getKakaoMemberInfo(kakaoToken);
+    }
+
+    @Operation(summary = "카카오 로그인 및 회원가입")
+    @GetMapping ("/login")
+    public ResponseEntity<OAuthTokenResponse> kakaoLogin(String kakaoToken){
         OAuthTokenResponse response = authService.kakaoLogin(authService.getKakaoMemberInfo(kakaoToken));
         return ResponseEntity.ok(response);
     }
-
 }
