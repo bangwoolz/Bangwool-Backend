@@ -7,15 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class RankingRequest {
-    @NotNull(message = RegexException.NULL_EXCEPTION)
-    @Positive(message = RegexException.RANKING_EXCEPTION)
-    private int start;
-
-    @NotNull(message = RegexException.NULL_EXCEPTION)
-    @Positive(message = RegexException.RANKING_EXCEPTION)
-    private int end;
-}
+//@Getter
+//@AllArgsConstructor
+//@NoArgsConstructor
+//public class RankingRequest {
+//    @NotNull(message = RegexException.NULL_EXCEPTION)
+//    @Positive(message = RegexException.RANKING_EXCEPTION)
+//    private int start;
+//
+//    @NotNull(message = RegexException.NULL_EXCEPTION)
+//    @Positive(message = RegexException.RANKING_EXCEPTION)
+//    private int end;
+//}

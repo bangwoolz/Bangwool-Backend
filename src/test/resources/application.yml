@@ -19,6 +19,22 @@ spring:
       settings:
         web-allow-others: true
 
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    redirect-uri: ${KAKAO_REDIRECT_URI}
+    api-key: ${KAKAO_API_KEY}
+
 security.jwt.token:
   secret-key: testtesttesttesttesttesttesttesttesttest
   expire-length: 864000
+
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+    tags-sorter: alpha

@@ -3,6 +3,7 @@ package bangwool.server.repository;
 import bangwool.server.domain.Ranking;
 import bangwool.server.dto.response.RankingResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
@@ -13,17 +14,16 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
     @Query("SELECT" +
             " new bangwool.server.dto.response.RankingResponse (DENSE_RANK() OVER (ORDER BY r.weekWorkedMinute), m.nickname, r.weekWorkedMinute )" +
             " FROM Ranking r" +
-            " JOIN Member m ON r.member.id = m.id" +
             " WHERE r.weekWorkedMinute BETWEEN :start AND :end ")
-    List<RankingResponse> findRankByWeek(int start, int end);
+    List<RankingResponse> findRankByWeek();
 
     @Query("SELECT" +
             " new bangwool.server.dto.response.RankingResponse (DENSE_RANK() OVER (ORDER BY r.dayWorkedMinute), m.nickname, r.dayWorkedMinute )" +
             " FROM Ranking r" +
-            " JOIN Member m ON r.member.id = m.id" +
             " WHERE r.dayWorkedMinute BETWEEN :start AND :end ")
-    List<RankingResponse> findRankByDay(int start, int end);
+    List<RankingResponse> findRankByDay();
 
+    @Modifying
     @Query("UPDATE Ranking r " +
             "SET r.dayWorkedMinute = ( " +
             "    SELECT COALESCE(SUM(w.workedHour * 60 + w.workedMin), 0) " +
@@ -37,6 +37,7 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
             "    WHERE m.id = r.member.id)")
     void UpdateDayWorkedByTime(Timestamp baseTime);
 
+    @Modifying
     @Query("UPDATE Ranking r " +
             "SET r.weekWorkedMinute = ( " +
             "    SELECT COALESCE(SUM(w.workedHour * 60 + w.workedMin), 0) " +
