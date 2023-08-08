@@ -2,8 +2,8 @@ package bangwool.server.controller;
 
 
 import bangwool.server.dto.request.WorkRequest;
-import bangwool.server.dto.response.WorkResponse;
-import bangwool.server.dto.response.WorksTodayResponse;
+import bangwool.server.dto.request.YearMonthRequest;
+import bangwool.server.dto.response.*;
 import bangwool.server.security.auth.LoginUserId;
 import bangwool.server.service.WorkService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +40,27 @@ public class WorkController {
             @LoginUserId Long memberId) {
         return ResponseEntity.ok(workService.findTodayPpomodoro(memberId));
     }
+
+    @Operation(summary = "월간 통계 반환")
+    @SecurityRequirement(name = "JWT")
+    @PostMapping("/month")
+    public ResponseEntity<WorksMonthResponse> monthWork(@LoginUserId Long memberId,
+                                                        @RequestBody YearMonthRequest yearMonthRequest) {
+        WorksMonthResponse worksMonthResponse = workService.findMonthPpomodoro(memberId,
+                yearMonthRequest.getYear(),
+                yearMonthRequest.getMonth());
+        return ResponseEntity.ok(worksMonthResponse);
+    }
+
+    @Operation(summary = "주간 통계 반환")
+    @SecurityRequirement(name = "JWT")
+    @GetMapping("/week")
+    public ResponseEntity<WorksWeekResponse> weekWork(@LoginUserId Long memberId) {
+        return ResponseEntity.ok(workService.findWeekPpomodoro(memberId));
+    }
+
+
+
+
 
 }

@@ -1,14 +1,11 @@
 package bangwool.server.service;
 
-import bangwool.server.domain.Member;
 import bangwool.server.domain.Ppomodoro;
 import bangwool.server.domain.Work;
 import bangwool.server.dto.request.WorkRequest;
-import bangwool.server.dto.response.WorkResponse;
-import bangwool.server.dto.response.WorkTodayResponse;
-import bangwool.server.dto.response.WorksTodayResponse;
+import bangwool.server.dto.response.*;
 import bangwool.server.exception.notfound.NotFoundMemberException;
-import bangwool.server.exception.notfound.NotFoundPpomodororException;
+import bangwool.server.exception.notfound.NotFoundPpomodoroException;
 import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.PpomodoroRepository;
 import bangwool.server.repository.WorkRepository;
@@ -17,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,12 +28,18 @@ public class WorkService {
     private final PpomodoroRepository ppomodoroRepository;
     private final MemberRepository memberRepository;
 
+    private final int START_HOUR_OF_DAY = 6;
+    private final int START_MIN_OF_DAY = 0;
+    private final int START_SEC_OF_DAY = 0;
+    private final int START_DAY_OF_MONTH = 1;
+
+
     @Transactional
     public WorkResponse save(Long memberId, Long ppomodoroId, WorkRequest request) {
         memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
         Ppomodoro ppomodoro = ppomodoroRepository.findById(ppomodoroId)
-                .orElseThrow(NotFoundPpomodororException::new);
+                .orElseThrow(NotFoundPpomodoroException::new);
         Work work = workRepository.save(Work.builder()
                 .workedHour(request.getWorkedHour())
                 .workedMin(request.getWorkedMin())
@@ -45,13 +50,94 @@ public class WorkService {
         return new WorkResponse(work.getId());
     }
 
-    //todo r : 오늘의 뽀모도로 어떻게 했는지? -> 통계자료 만들어서, 랭킹
-
     public WorksTodayResponse findTodayPpomodoro(Long memberId) {
        memberRepository.findById(memberId)
                .orElseThrow(NotFoundMemberException::new);
         List<WorkTodayResponse> todayWorkedPpomodoro = workRepository
                 .findTodayWorkByMemberId(memberId, Date.valueOf(LocalDate.now()));
+
         return new WorksTodayResponse(todayWorkedPpomodoro);
     }
+
+
+    public WorksMonthResponse findMonthPpomodoro(Long memberId,int year, int month) {
+        memberRepository.findById(memberId)
+                .orElseThrow(NotFoundMemberException::new);
+
+        Timestamp baseMonth = Timestamp.valueOf(LocalDateTime.of(year, month,
+                START_DAY_OF_MONTH, START_HOUR_OF_DAY,START_MIN_OF_DAY));
+        Timestamp endMonth = Timestamp.valueOf(LocalDateTime.of(year, month+1,
+                START_DAY_OF_MONTH, START_HOUR_OF_DAY, START_MIN_OF_DAY));
+        return sumMonthWorkByDay(
+                new WorksMonthResponse(workRepository.findMonthWorkByMemberId(memberId, baseMonth, endMonth))
+        );
+    }
+
+    public WorksWeekResponse findWeekPpomodoro(Long memberId) {
+        memberRepository.findById(memberId)
+                .orElseThrow(NotFoundMemberException::new);
+
+        int currentWeek = LocalDateTime.now().getDayOfWeek().getValue() - 1;
+
+        Timestamp baseWeek = Timestamp.valueOf(LocalDateTime.now()
+                .minusDays(currentWeek)
+                .toLocalDate()
+                .atTime(START_HOUR_OF_DAY, START_MIN_OF_DAY, START_SEC_OF_DAY));
+
+        List<WorkWeekResponse> workWeekResponses = workRepository
+                .findWeekWorkByMemberId(memberId, baseWeek);
+
+        return sumWeekWorkByDay(
+                new WorksWeekResponse(workWeekResponses)
+        );
+    }
+
+    private WorksWeekResponse sumWeekWorkByDay(WorksWeekResponse workWeekResponses) {
+        WorksWeekResponse worksWeekResponse = new WorksWeekResponse();
+        WorkWeekResponse workWeekResponse = null;
+
+        for(WorkWeekResponse w : workWeekResponses.getWorks()) {
+            if(workWeekResponse == null) {
+                workWeekResponse = w;
+                continue;
+            }
+            if(!isSameDay(workWeekResponse.getCreateDate(), w.getCreateDate())) {
+                worksWeekResponse.addWorkMonth(workWeekResponse);
+                workWeekResponse = w;
+                continue;
+            }
+            workWeekResponse.addTime(w.getWorkHour(), w.getWorkMin());
+        }
+        worksWeekResponse.addWorkMonth(workWeekResponse);
+
+        return worksWeekResponse;
+    }
+
+    private WorksMonthResponse sumMonthWorkByDay(WorksMonthResponse workMonthResponses) {
+        WorksMonthResponse worksMonthResponse = new WorksMonthResponse();
+        WorkMonthResponse workMonthResponse = null;
+
+        for(WorkMonthResponse w : workMonthResponses.getWorks()) {
+            if(workMonthResponse == null) {
+                workMonthResponse = w;
+                continue;
+            }
+            if(!isSameDay(workMonthResponse.getCreateDate(), w.getCreateDate())) {
+                worksMonthResponse.addWorkMonth(workMonthResponse);
+                workMonthResponse = w;
+                continue;
+            }
+            workMonthResponse.addTime(w.getWorkHour(), w.getWorkMin());
+        }
+        worksMonthResponse.addWorkMonth(workMonthResponse);
+
+        return worksMonthResponse;
+    }
+
+    private boolean isSameDay(Timestamp baseDay, Timestamp comparedDay) {
+        return (comparedDay.getDay() == baseDay.getDay()) ||
+                comparedDay.getHours() < 6;
+    }
+
+
 }
