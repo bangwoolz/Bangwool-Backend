@@ -1,5 +1,6 @@
 package bangwool.server.service;
 
+import bangwool.server.domain.Ranking;
 import bangwool.server.dto.response.RankingResponses;
 import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.RankingRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +49,9 @@ public class RankingService {
 
     public RankingResponses getDayRanking() {
         return new RankingResponses(rankingRepository.findRankByDay());
+    }
+
+    public List<Ranking> findAll() {
+        return rankingRepository.findAll();
     }
 }

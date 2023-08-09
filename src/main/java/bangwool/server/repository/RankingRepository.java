@@ -12,15 +12,13 @@ import java.util.List;
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
 
     @Query("SELECT" +
-            " new bangwool.server.dto.response.RankingResponse (DENSE_RANK() OVER (ORDER BY r.weekWorkedMinute), m.nickname, r.weekWorkedMinute )" +
-            " FROM Ranking r" +
-            " WHERE r.weekWorkedMinute BETWEEN :start AND :end ")
+            " new bangwool.server.dto.response.RankingResponse (DENSE_RANK() OVER (ORDER BY r.weekWorkedMinute), r.member.nickname, r.weekWorkedMinute )" +
+            " FROM Ranking r")
     List<RankingResponse> findRankByWeek();
 
     @Query("SELECT" +
-            " new bangwool.server.dto.response.RankingResponse (DENSE_RANK() OVER (ORDER BY r.dayWorkedMinute), m.nickname, r.dayWorkedMinute )" +
-            " FROM Ranking r" +
-            " WHERE r.dayWorkedMinute BETWEEN :start AND :end ")
+            " new bangwool.server.dto.response.RankingResponse (DENSE_RANK() OVER (ORDER BY r.dayWorkedMinute), r.member.nickname, r.dayWorkedMinute )" +
+            " FROM Ranking r")
     List<RankingResponse> findRankByDay();
 
     @Modifying
@@ -30,11 +28,7 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
             "    FROM Ppomodoro p " +
             "    JOIN Work w ON p.id = w.ppomodoro.id " +
             "    WHERE w.createDate >= :baseTime AND p.member.id = r.member.id " +
-            ") " +
-            "WHERE EXISTS ( " +
-            "    SELECT 1 " +
-            "    FROM Member m " +
-            "    WHERE m.id = r.member.id)")
+            ") ")
     void UpdateDayWorkedByTime(Timestamp baseTime);
 
     @Modifying
@@ -44,10 +38,7 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
             "    FROM Ppomodoro p " +
             "    JOIN Work w ON p.id = w.ppomodoro.id " +
             "    WHERE w.createDate >= :baseTime AND p.member.id = r.member.id " +
-            ") " +
-            "WHERE EXISTS ( " +
-            "    SELECT 1 " +
-            "    FROM Member m " +
-            "    WHERE m.id = r.member.id)")
+            ") ")
     void UpdatedWeekWorkedByTime(Timestamp baseTime);
+
 }
