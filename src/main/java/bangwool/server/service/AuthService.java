@@ -2,6 +2,7 @@ package bangwool.server.service;
 
 import bangwool.server.domain.Member;
 import bangwool.server.domain.Platform;
+import bangwool.server.domain.Ranking;
 import bangwool.server.dto.KakaoUser;
 import bangwool.server.dto.request.AuthLoginRequest;
 import bangwool.server.dto.request.KakaoLoginRequest;
@@ -12,6 +13,7 @@ import bangwool.server.dto.response.TokenResponse;
 import bangwool.server.exception.badreqeust.PasswordMismatchException;
 import bangwool.server.exception.notfound.NotFoundMemberException;
 import bangwool.server.repository.MemberRepository;
+import bangwool.server.repository.RankingRepository;
 import bangwool.server.security.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Transactional(readOnly = true)
 public class AuthService {
     private final MemberRepository memberRepository;
+    private final RankingRepository rankingRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -119,8 +122,17 @@ public class AuthService {
                             .platform(memberInfo.getPlatform())
                             .platformId(memberInfo.getId())
                             .email(memberInfo.getEmail())
+                            .nickname(memberInfo.getEmail().substring(0, 4))
                             .build();
                     Member savedMember = memberRepository.save(member);
+
+                    Ranking ranking = Ranking.builder()
+                            .dayWorkedMinute(0)
+                            .weekWorkedMinute(0)
+                            .member(member)
+                            .build();
+                    rankingRepository.save(ranking);
+
                     String token = issueToken(savedMember);
                     return new OAuthTokenResponse(token,  Platform.KAKAO, platformId, savedMember.getId());
                 });
