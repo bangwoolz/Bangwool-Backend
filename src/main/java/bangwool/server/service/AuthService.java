@@ -122,7 +122,7 @@ public class AuthService {
                             .platform(memberInfo.getPlatform())
                             .platformId(memberInfo.getId())
                             .email(memberInfo.getEmail())
-                            .name(memberInfo.getEmail().substring(0, 4))
+                            .nickname(memberInfo.getEmail().substring(0, 4))
                             .build();
                     Member savedMember = memberRepository.save(member);
 
