@@ -7,6 +7,6 @@ import lombok.*;
 @Getter
 @ToString
 public class KakaoLoginRequest {
-    private String code;
+    private String token;
 }
 

@@ -4,6 +4,7 @@ import bangwool.server.domain.Member;
 import bangwool.server.domain.Platform;
 import bangwool.server.dto.KakaoUser;
 import bangwool.server.dto.request.AuthLoginRequest;
+import bangwool.server.dto.request.KakaoLoginRequest;
 import bangwool.server.dto.response.KakaoMemberInfoResponse;
 import bangwool.server.dto.response.KakaoTokenResponse;
 import bangwool.server.dto.response.OAuthTokenResponse;
@@ -87,7 +88,7 @@ public class AuthService {
     }
 
 //
-    public KakaoMemberInfoResponse getKakaoMemberInfo(String token) {
+    public KakaoMemberInfoResponse getKakaoMemberInfo(KakaoLoginRequest kakaoLoginRequest) {
         //카카오에 요청 보내기 및 응답 받기
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://kapi.kakao.com")
@@ -97,7 +98,7 @@ public class AuthService {
         // 사용자 정보 가져오기 : 이메일, 프로필 사진, 닉네임\
         KakaoUser response = webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/v2/user/me").build())
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + kakaoLoginRequest.getToken())
                 .retrieve().bodyToMono(KakaoUser.class).block();
         return KakaoMemberInfoResponse.of(response);
     }

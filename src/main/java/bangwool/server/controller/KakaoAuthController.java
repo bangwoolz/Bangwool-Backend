@@ -8,6 +8,7 @@ import bangwool.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +48,9 @@ public class KakaoAuthController {
     }
 
     @Operation(summary = "카카오 로그인 및 회원가입")
-    @GetMapping ("/login")
-    public ResponseEntity<OAuthTokenResponse> kakaoLogin(String kakaoToken){
-        OAuthTokenResponse response = authService.kakaoLogin(authService.getKakaoMemberInfo(kakaoToken));
+    @PostMapping ("/login")
+    public ResponseEntity<OAuthTokenResponse> kakaoLogin(@RequestBody @Valid KakaoLoginRequest kakaoLoginRequest){
+        OAuthTokenResponse response = authService.kakaoLogin(authService.getKakaoMemberInfo(kakaoLoginRequest));
         return ResponseEntity.ok(response);
     }
 }

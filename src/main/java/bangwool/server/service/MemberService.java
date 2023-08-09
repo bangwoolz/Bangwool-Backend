@@ -42,6 +42,7 @@ public class MemberService {
         Ranking ranking = Ranking.builder()
                 .dayWorkedMinute(0)
                 .weekWorkedMinute(0)
+                .member(member)
                 .build();
 
         try {
