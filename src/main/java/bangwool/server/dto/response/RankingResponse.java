@@ -9,16 +9,11 @@ import lombok.ToString;
 @ToString
 public class RankingResponse {
 
-
-    private int rank;
     private String nickname;
-    private int workedHour;
-    private int workedMin;
+    private int workedMinute;
 
-    public RankingResponse(int rank, String nickname, int workedMin) {
-        this.rank = rank;
+    public RankingResponse(String nickname, int workedMinute) {
         this.nickname = nickname;
-        this.workedMin = workedMin % 60;
-        this.workedHour = workedMin / 60;
+        this.workedMinute = workedMinute;
     }
 }
