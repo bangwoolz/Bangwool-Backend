@@ -15,11 +15,11 @@ public class KakaoMemberInfoResponse {
     private Platform platform = Platform.KAKAO;
     private Long id;
     private String email;
+    private String nickname;
 
     public static KakaoMemberInfoResponse of(KakaoUser kakaoUser) {
         return new KakaoMemberInfoResponse(
-                Platform.KAKAO, kakaoUser.getId(), kakaoUser.getEmail()
+                Platform.KAKAO, kakaoUser.getId(), kakaoUser.getEmail(), kakaoUser.getNickname()
         );
     }
-
 }

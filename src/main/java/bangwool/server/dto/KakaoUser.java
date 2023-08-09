@@ -16,14 +16,28 @@ public class KakaoUser {
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
 
+    @JsonProperty("properties")
+    private KakaoProperties kakaoProperties;
+
     public String getEmail() {
         return kakaoAccount.getEmail();
     }
+
+    public String getNickname(){
+        return kakaoProperties.getNickname();
+    }
+
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     private static class KakaoAccount {
-
         private String email;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    private static class KakaoProperties {
+        private String nickname;
     }
 }
