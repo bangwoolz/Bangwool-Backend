@@ -47,9 +47,9 @@ public class KakaoAuthController {
     }
 
     @Operation(summary = "카카오 로그인 및 회원가입")
-    @GetMapping ("/login")
-    public ResponseEntity<OAuthTokenResponse> kakaoLogin(String kakaoToken){
-        OAuthTokenResponse response = authService.kakaoLogin(authService.getKakaoMemberInfo(kakaoToken));
+    @PostMapping ("/login")
+    public ResponseEntity<OAuthTokenResponse> kakaoLogin(KakaoLoginRequest kakaoLoginRequest){
+        OAuthTokenResponse response = authService.kakaoLogin(authService.getKakaoMemberInfo(kakaoLoginRequest));
         return ResponseEntity.ok(response);
     }
 }
