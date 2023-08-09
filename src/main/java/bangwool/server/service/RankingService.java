@@ -25,8 +25,7 @@ public class RankingService {
     private final int START_MIN_OF_DAY = 0;
     private final int START_SEC_OF_DAY = 0;
 
-    @Scheduled(cron = "0 0 * * * *")
-    protected void updateRanking() {
+    public void updateRanking() {
 
         int currentWeek = LocalDateTime.now().getDayOfWeek().getValue() - 1;
 
@@ -42,11 +41,11 @@ public class RankingService {
         rankingRepository.UpdatedWeekWorkedByTime(baseWeek);
     }
 
-    public RankingResponses getWeekRanking(int start, int end) {
-        return new RankingResponses(rankingRepository.findRankByWeek(start, end));
+    public RankingResponses getWeekRanking() {
+        return new RankingResponses(rankingRepository.findRankByWeek());
     }
 
-    public RankingResponses getDayRanking(int start, int end) {
-        return new RankingResponses(rankingRepository.findRankByDay(start, end));
+    public RankingResponses getDayRanking() {
+        return new RankingResponses(rankingRepository.findRankByDay());
     }
 }
