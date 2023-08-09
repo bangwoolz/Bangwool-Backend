@@ -102,6 +102,7 @@ public class AuthService {
         return KakaoMemberInfoResponse.of(response);
     }
 
+    @Transactional
     public OAuthTokenResponse kakaoLogin(KakaoMemberInfoResponse memberInfo) {
         String email = memberInfo.getEmail();
         Long platformId = memberInfo.getId();
