@@ -30,8 +30,6 @@ public class WorkService {
 
     private final int START_HOUR_OF_DAY = 6;
     private final int START_MIN_OF_DAY = 0;
-    private final int START_SEC_OF_DAY = 0;
-    private final int START_DAY_OF_MONTH = 1;
 
 
     @Transactional
@@ -53,10 +51,10 @@ public class WorkService {
     public WorksTodayResponse findTodayPpomodoro(Long memberId) {
        memberRepository.findById(memberId)
                .orElseThrow(NotFoundMemberException::new);
-        List<WorkTodayResponse> todayWorkedPpomodoro = workRepository
-                .findTodayWorkByMemberId(memberId, Date.valueOf(LocalDate.now()));
-
-        return new WorksTodayResponse(todayWorkedPpomodoro);
+        return sumWorkByPpomo(
+                new WorksTodayResponse(workRepository
+                        .findTodayWorkByMemberId(memberId, Date.valueOf(LocalDate.now()))
+                ));
     }
 
 
@@ -64,6 +62,7 @@ public class WorkService {
         memberRepository.findById(memberId)
                 .orElseThrow(NotFoundMemberException::new);
 
+        int START_DAY_OF_MONTH = 1;
         Timestamp baseMonth = Timestamp.valueOf(LocalDateTime.of(year, month,
                 START_DAY_OF_MONTH, START_HOUR_OF_DAY,START_MIN_OF_DAY));
         Timestamp endMonth = Timestamp.valueOf(LocalDateTime.of(year, month+1,
@@ -79,6 +78,7 @@ public class WorkService {
 
         int currentWeek = LocalDateTime.now().getDayOfWeek().getValue() - 1;
 
+        int START_SEC_OF_DAY = 0;
         Timestamp baseWeek = Timestamp.valueOf(LocalDateTime.now()
                 .minusDays(currentWeek)
                 .toLocalDate()
@@ -92,6 +92,26 @@ public class WorkService {
         );
     }
 
+    private WorksTodayResponse sumWorkByPpomo(WorksTodayResponse workTodayResponses) {
+        WorksTodayResponse worksTodayResponse = new WorksTodayResponse();
+        WorkTodayResponse workTodayResponse = null;
+
+        for(WorkTodayResponse w : workTodayResponses.getWorks()) {
+            if(workTodayResponse == null) {
+                workTodayResponse = w;
+                continue;
+            }
+            if(!isSamePpomo(workTodayResponse.getPpomodoroId(), w.getPpomodoroId())) {
+                worksTodayResponse.addPpomo(workTodayResponse);
+                workTodayResponse = w;
+                continue;
+            }
+            workTodayResponse.addTime(w.getWorkHour(), w.getWorkMin());
+        }
+        worksTodayResponse.addPpomo(workTodayResponse);
+
+        return worksTodayResponse;
+    }
     private WorksWeekResponse sumWeekWorkByDay(WorksWeekResponse workWeekResponses) {
         WorksWeekResponse worksWeekResponse = new WorksWeekResponse();
         WorkWeekResponse workWeekResponse = null;
@@ -101,7 +121,7 @@ public class WorkService {
                 workWeekResponse = w;
                 continue;
             }
-            if(!isSameDay(workWeekResponse.getCreateDate(), w.getCreateDate())) {
+            if(isSameDay(workWeekResponse.getCreateDate(), w.getCreateDate())) {
                 worksWeekResponse.addWorkMonth(workWeekResponse);
                 workWeekResponse = w;
                 continue;
@@ -122,7 +142,7 @@ public class WorkService {
                 workMonthResponse = w;
                 continue;
             }
-            if(!isSameDay(workMonthResponse.getCreateDate(), w.getCreateDate())) {
+            if(isSameDay(workMonthResponse.getCreateDate(), w.getCreateDate())) {
                 worksMonthResponse.addWorkMonth(workMonthResponse);
                 workMonthResponse = w;
                 continue;
@@ -135,8 +155,12 @@ public class WorkService {
     }
 
     private boolean isSameDay(Timestamp baseDay, Timestamp comparedDay) {
-        return (comparedDay.getDay() == baseDay.getDay()) ||
-                comparedDay.getHours() < 6;
+        return (comparedDay.getDay() != baseDay.getDay()) &&
+                comparedDay.getHours() >= 6;
+    }
+
+    private boolean isSamePpomo(Long baseId, Long compareId) {
+        return baseId.equals(compareId);
     }
 
 
