@@ -7,6 +7,8 @@ import bangwool.server.dto.request.MemberSignUpRequest;
 import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
 import bangwool.server.exception.badreqeust.DuplicateException;
+import bangwool.server.dto.response.MypageResponse;
+import bangwool.server.exception.notfound.NotFoundMemberException;
 import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.RankingRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +57,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public ExistResponse isExistMemberByEmail(String email) {
-        if (memberRepository.findByEmail(email).isPresent()){
+        if (memberRepository.findByEmail(email).isPresent()) {
             return new ExistResponse(true);
         }
         return new ExistResponse(false);
@@ -61,10 +65,17 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public ExistResponse isExistMemberByNickname(String nickname) {
-        if (memberRepository.findByNickname(nickname).isPresent()){
+        if (memberRepository.findByNickname(nickname).isPresent()) {
             return new ExistResponse(true);
         }
         return new ExistResponse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public MypageResponse findMypage(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
+        return new MypageResponse(member.getEmail(), member.getNickname(), member.getProfile());
     }
 
 }

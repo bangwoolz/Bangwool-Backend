@@ -19,14 +19,14 @@ spring:
       settings:
         web-allow-others: true
 
-oauth:
-  kakao:
-    client-id: ${KAKAO_CLIENT_ID}
-    redirect-uri: ${KAKAO_REDIRECT_URI}
-    api-key: ${KAKAO_API_KEY}
+
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  api-key: ${KAKAO_API_KEY}
 
 security.jwt.token:
-  secret-key: testtesttesttesttesttesttesttesttesttest
+  secret-key: testtesttesttesttesttesttesttesttesttesttest
   expire-length: 864000
 
 

@@ -1,9 +1,10 @@
 package bangwool.server.controller;
 
 import bangwool.server.dto.request.MemberSignUpRequest;
-import bangwool.server.dto.request.MemberValidNicknameRequest;
 import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
+import bangwool.server.dto.response.MypageResponse;
+import bangwool.server.security.auth.LoginUserId;
 import bangwool.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,5 +41,12 @@ public class MemberController {
     @GetMapping("/exist/nickname")
     public ResponseEntity<ExistResponse> validMemberByNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.isExistMemberByNickname(nickname));
+    }
+
+    @Operation(summary = "마이페이지 조회")
+    @GetMapping("/mypage")
+    public ResponseEntity<MypageResponse> getMypage(@LoginUserId Long memberId){
+        MypageResponse mypageResponse = memberService.findMypage(memberId);
+        return ResponseEntity.ok(mypageResponse);
     }
 }
