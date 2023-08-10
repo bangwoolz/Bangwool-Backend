@@ -3,12 +3,19 @@ package bangwool.server.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import  java.util.List;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class WorksTodayResponse {
     private List<WorkTodayResponse> works;
+
+    public WorksTodayResponse() {
+        works = new ArrayList<>();
+    }
+    public void addPpomo(WorkTodayResponse workTodayResponse) {
+        works.add(workTodayResponse);
+    }
 }

@@ -59,8 +59,4 @@ public class WorkController {
         return ResponseEntity.ok(workService.findWeekPpomodoro(memberId));
     }
 
-
-
-
-
 }

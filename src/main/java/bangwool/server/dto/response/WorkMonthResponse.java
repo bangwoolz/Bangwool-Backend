@@ -27,8 +27,9 @@ public class WorkMonthResponse {
     }
 
     public void addTime(int workHour, int workMin) {
-        this.workHour = (this.workHour + workHour)  + workMin / 60;
-        this.workMin = (this.workMin + workMin) % 60;
+        this.workMin = this.workMin + workMin;
+        this.workHour = (this.workHour + workHour)  + this.workMin / 60;
+        this.workMin = this.workMin % 60;
     }
 
 }
