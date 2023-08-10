@@ -29,18 +29,19 @@ public class RankingController {
 
         rankingService.updateRanking();
         return ResponseEntity.ok(
-                rankingService.getDayRanking()
+                rankingService.getDayRanking(memberId)
         );
     }
 
     @Operation(summary = "주간 랭킹 조회")
     @GetMapping("/week")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<RankingResponses> getRankByWeek(
             @LoginUserId Long memberId) {
 
         rankingService.updateRanking();
         return ResponseEntity.ok(
-                rankingService.getWeekRanking()
+                rankingService.getWeekRanking(memberId)
         );
     }
 }

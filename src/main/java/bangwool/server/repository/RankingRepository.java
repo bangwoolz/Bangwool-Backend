@@ -12,16 +12,16 @@ import java.util.List;
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
 
     @Query("SELECT" +
-            " new bangwool.server.dto.response.RankingResponse (r.member.nickname, r.weekWorkedMinute )" +
+            " new bangwool.server.dto.response.RankingResponse (r.member.nickname, r.weekWorkedMinute, r.member.id, :memberId)" +
             " FROM Ranking r " +
             " ORDER BY r.weekWorkedMinute DESC")
-    List<RankingResponse> findRankByWeek();
+    List<RankingResponse> findRankByWeek(long memberId);
 
     @Query("SELECT" +
-            " new bangwool.server.dto.response.RankingResponse (r.member.nickname, r.dayWorkedMinute )" +
+            " new bangwool.server.dto.response.RankingResponse (r.member.nickname, r.dayWorkedMinute, r.member.id, :memberId)" +
             " FROM Ranking r" +
             " ORDER BY r.weekWorkedMinute DESC")
-    List<RankingResponse> findRankByDay();
+    List<RankingResponse> findRankByDay(long memberId);
 
     @Modifying
     @Query("UPDATE Ranking r " +
