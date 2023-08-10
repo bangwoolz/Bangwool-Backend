@@ -6,8 +6,10 @@ import bangwool.server.domain.Ranking;
 import bangwool.server.dto.request.MemberSignUpRequest;
 import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
+import bangwool.server.dto.response.MypageResponse;
 import bangwool.server.exception.badreqeust.DuplicateEmailException;
 import bangwool.server.exception.badreqeust.DuplicateNickNameException;
+import bangwool.server.exception.notfound.NotFoundMemberException;
 import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.RankingRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class MemberService {
         try {
             memberRepository.save(member);
             rankingRepository.save(ranking);
-        } catch(DataIntegrityViolationException | JDBCException ex) {
+        } catch (DataIntegrityViolationException | JDBCException ex) {
             String errorMessage = ex.getMessage().split(PARSER)[0];
             if (errorMessage.contains("EMAIL")) {
                 throw new DuplicateEmailException();
@@ -63,7 +67,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public ExistResponse isExistMemberByEmail(String email) {
-        if (memberRepository.findByEmail(email).isPresent()){
+        if (memberRepository.findByEmail(email).isPresent()) {
             return new ExistResponse(true);
         }
         return new ExistResponse(false);
@@ -71,10 +75,17 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public ExistResponse isExistMemberByNickname(String nickname) {
-        if (memberRepository.findByNickname(nickname).isPresent()){
+        if (memberRepository.findByNickname(nickname).isPresent()) {
             return new ExistResponse(true);
         }
         return new ExistResponse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public MypageResponse findMypage(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(NotFoundMemberException::new);
+        return new MypageResponse(member.getEmail(), member.getNickname(), member.getProfile());
     }
 
 }
