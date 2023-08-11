@@ -20,7 +20,7 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
     @Query("SELECT" +
             " new bangwool.server.dto.response.RankingResponse (r.member.nickname, r.dayWorkedMinute, r.member.id, :memberId)" +
             " FROM Ranking r" +
-            " ORDER BY r.weekWorkedMinute DESC")
+            " ORDER BY r.dayWorkedMinute DESC")
     List<RankingResponse> findRankByDay(long memberId);
 
     @Modifying
