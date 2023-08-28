@@ -75,7 +75,7 @@ public class MemberService {
     public MypageResponse findMypage(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
-        return new MypageResponse(member.getEmail(), member.getNickname(), member.getProfile());
+        return new MypageResponse(member.getEmail(), member.getName() ,member.getNickname(), member.getProfile());
     }
 
 }
