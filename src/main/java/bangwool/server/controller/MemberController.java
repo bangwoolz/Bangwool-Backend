@@ -4,6 +4,7 @@ import bangwool.server.dto.request.MemberSignUpRequest;
 import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
 import bangwool.server.dto.response.MypageResponse;
+import bangwool.server.dto.response.PasswordChangeResponse;
 import bangwool.server.security.auth.LoginUserId;
 import bangwool.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,4 +50,11 @@ public class MemberController {
         MypageResponse mypageResponse = memberService.findMypage(memberId);
         return ResponseEntity.ok(mypageResponse);
     }
+    @Operation(summary = "비밀번호 변경")
+    @GetMapping("/chagepassword")
+    public ResponseEntity<PasswordChangeResponse> changePassword(@LoginUserId Long memberId, String password){
+        PasswordChangeResponse passwordChangeResponse = memberService.changePassword(memberId, password);
+        return ResponseEntity.ok(passwordChangeResponse);
+    }
+
 }

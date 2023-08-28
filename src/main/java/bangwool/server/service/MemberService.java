@@ -6,6 +6,7 @@ import bangwool.server.domain.Ranking;
 import bangwool.server.dto.request.MemberSignUpRequest;
 import bangwool.server.dto.response.ExistResponse;
 import bangwool.server.dto.response.MemberSignUpResponse;
+import bangwool.server.dto.response.PasswordChangeResponse;
 import bangwool.server.exception.badreqeust.DuplicateException;
 import bangwool.server.dto.response.MypageResponse;
 import bangwool.server.exception.notfound.NotFoundMemberException;
@@ -16,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +75,12 @@ public class MemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(NotFoundMemberException::new);
         return new MypageResponse(member.getEmail(), member.getName() ,member.getNickname(), member.getProfile());
+    }
+
+    public PasswordChangeResponse changePassword(Long id, String password){
+        String encodedPassword = passwordEncoder.encode(password);
+        memberRepository.updatePasswordById(id, encodedPassword);
+        return new PasswordChangeResponse(true);
     }
 
 }
