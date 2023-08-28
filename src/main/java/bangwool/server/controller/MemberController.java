@@ -1,10 +1,7 @@
 package bangwool.server.controller;
 
 import bangwool.server.dto.request.MemberSignUpRequest;
-import bangwool.server.dto.response.ExistResponse;
-import bangwool.server.dto.response.MemberSignUpResponse;
-import bangwool.server.dto.response.MypageResponse;
-import bangwool.server.dto.response.PasswordChangeResponse;
+import bangwool.server.dto.response.*;
 import bangwool.server.security.auth.LoginUserId;
 import bangwool.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,6 +52,13 @@ public class MemberController {
     public ResponseEntity<PasswordChangeResponse> changePassword(@LoginUserId Long memberId, String password){
         PasswordChangeResponse passwordChangeResponse = memberService.changePassword(memberId, password);
         return ResponseEntity.ok(passwordChangeResponse);
+    }
+
+    @Operation(summary = "회원 탈퇴")
+    @GetMapping("/signout")
+    public ResponseEntity<SignoutResponse> signOut(@LoginUserId Long memberId){
+        SignoutResponse signoutResponse = memberService.signOut(memberId);
+        return ResponseEntity.ok(signoutResponse);
     }
 
 }

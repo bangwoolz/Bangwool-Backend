@@ -4,11 +4,8 @@ package bangwool.server.service;
 import bangwool.server.domain.Member;
 import bangwool.server.domain.Ranking;
 import bangwool.server.dto.request.MemberSignUpRequest;
-import bangwool.server.dto.response.ExistResponse;
-import bangwool.server.dto.response.MemberSignUpResponse;
-import bangwool.server.dto.response.PasswordChangeResponse;
+import bangwool.server.dto.response.*;
 import bangwool.server.exception.badreqeust.DuplicateException;
-import bangwool.server.dto.response.MypageResponse;
 import bangwool.server.exception.notfound.NotFoundMemberException;
 import bangwool.server.repository.MemberRepository;
 import bangwool.server.repository.RankingRepository;
@@ -77,10 +74,18 @@ public class MemberService {
         return new MypageResponse(member.getEmail(), member.getName() ,member.getNickname(), member.getProfile());
     }
 
-    public PasswordChangeResponse changePassword(Long id, String password){
+    public PasswordChangeResponse changePassword(Long id, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         memberRepository.updatePasswordById(id, encodedPassword);
         return new PasswordChangeResponse(true);
     }
+
+    public SignoutResponse signOut(Long id) {
+        memberRepository.deleteById(id);
+        return new SignoutResponse(id);
+    }
+
+
+
 
 }
