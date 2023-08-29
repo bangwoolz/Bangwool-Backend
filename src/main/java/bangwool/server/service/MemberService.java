@@ -82,10 +82,8 @@ public class MemberService {
 
     public SignoutResponse signOut(Long id) {
         memberRepository.deleteById(id);
-        return new SignoutResponse(id);
+        return new SignoutResponse(true);
     }
-
-
 
 
 }

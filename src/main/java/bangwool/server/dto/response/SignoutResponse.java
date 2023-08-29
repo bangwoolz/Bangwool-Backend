@@ -6,5 +6,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class SignoutResponse {
-    private Long id;
+    private Boolean isSuccess;
 }
