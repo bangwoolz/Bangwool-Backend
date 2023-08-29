@@ -17,8 +17,12 @@ public class AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
 
-    public List<Announcement> getAnnouncements(Long id){
+    public List<Announcement> getAnnouncements(){
         return announcementRepository.findAll();
+    }
+
+    public Announcement getAnnouncement(Long id){
+        return announcementRepository.findById(id).get();
     }
 
 

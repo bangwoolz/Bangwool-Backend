@@ -5,6 +5,7 @@ import bangwool.server.dto.response.*;
 import bangwool.server.security.auth.LoginUserId;
 import bangwool.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,14 @@ public class MemberController {
     }
 
     @Operation(summary = "마이페이지 조회")
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/mypage")
     public ResponseEntity<MypageResponse> getMypage(@LoginUserId Long memberId){
         MypageResponse mypageResponse = memberService.findMypage(memberId);
         return ResponseEntity.ok(mypageResponse);
     }
     @Operation(summary = "비밀번호 변경")
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/chagepassword")
     public ResponseEntity<PasswordChangeResponse> changePassword(@LoginUserId Long memberId, String password){
         PasswordChangeResponse passwordChangeResponse = memberService.changePassword(memberId, password);
@@ -55,6 +58,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 탈퇴")
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/signout")
     public ResponseEntity<SignoutResponse> signOut(@LoginUserId Long memberId){
         SignoutResponse signoutResponse = memberService.signOut(memberId);

@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Announcement {
 
     @Id
